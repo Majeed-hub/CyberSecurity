@@ -1,0 +1,221 @@
+SHA-256 hashed representation as a hexadecimal string
+
+import hashlib
+def hash_password(password):
+password_bytes = password.encode('utf-8')
+hash_object = hashlib.sha256(password_bytes)
+password_hash = hash_object.hexdigest()
+return password_hash
+password = input("Input your password: ")
+hashed_password = hash_password(password)
+print(f"Your hashed password is: {hashed_password}"
+
+
+The function takes an optional parameter length, which is set to 8 by default. If no length is specified by the user, the password will have 8 characters.
+
+
+import random
+import string
+def generate_password(length=8):
+all_characters = string.ascii_letters + string.digits + string.punctuation
+password = ''.join(random.choice(all_characters) for i in range(length))
+return password
+password_length_str = input("Enter length of the password :")
+if password_length_str:
+password_length = int(password_length_str)
+else:
+password_length = 8
+password = generate_password(password_length)
+print(f" Generated password is: {password}")
+
+
+Write a Python program to check if a password meets the following criteria:
+a. At least 8 characters long
+
+import re
+password=input("Enter password : ")
+flag = 0
+while True:
+if (len(password)<=8):
+flag = -1
+break
+elif not re.search("[a-z]", password):
+flag = -1
+break
+elif not re.search("[A-Z]", password):
+flag = -1
+break
+elif not re.search("[0-9]", password):
+flag = -1
+break
+elif not re.search("[!&_@$]" , password):
+flag = -1
+break
+elif re.search("\s" , password):
+flag = -1
+break
+else:
+flag = 0
+print("Valid Password")
+break
+if flag == -1:
+print("Password does not meet requirements")
+
+
+
+least 8 characters, contains both uppercase and lowercase letters, and at least one number and one special character). Passwords that satisfy the requirements should be printed by the program
+
+
+import re
+def check_password(password):
+if(len(password)<=8):
+return False
+elif not re.search('[a-z]',password):
+return False
+elif not re.search('[A-Z]',password):
+return False
+elif not re.search('[0-9]',password):
+return False
+elif not re.search('[@#!_&$]',password):
+return False
+else:
+return True
+with open('passwords.txt') as f:
+for password in f:
+password = password.strip()
+if check_password(password):
+print("Valid Password: "+password)
+else:
+print("Invalid Password: "+password)
+
+
+the program should cnsider factor like length, complexity and randomness. It should also offer suggestions for enhencing the password's strength.
+
+import re
+def check_password_strength(password):
+score = 0
+suggestions = []
+if len(password) >= 8:
+score += 1
+else:
+suggestions.append("Password should be at least 8 characters long")
+letter if re.search(r"[A-Z]", password):
+score += 1
+else:
+suggestions.append("Password should contain at least one uplapercase letter")
+letter if re.search(r"[a-z]", password):
+score += 1
+else:
+suggestions.append("Password should contain at least one lowercase letter")
+if re.search(r"\d", password):
+score += 1
+else:
+suggestions.append("Password should contain at least one numeric digit")
+if re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+score += 1
+else:
+suggestions.append("Password should contain at least one special character (!@#$%^&*(),.?\":{}|<>)")
+return score, suggestions
+password = input("Input a password: ")
+lst=list(check_password_strength(password)) if(lst[0]>=5):
+print(f"Score is {lst[0]}")
+else:
+print(f"please correct :{lst[1]}")
+
+
+It checks each password to see if it has been leaked in a databreach. You can use the "Have I Been Pwned" API (https://haveibeenpwned.com/API/v3) to check if a password has been leaked.
+
+
+import requests
+import hashlib
+with open('passwords.txt', 'r') as f: for line in f:
+username, password = line.strip().split(',')
+password_hash = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+response =
+requests.get(f"https://api.pwnedpasswords.com/range/{password_hash[:5]}")
+if response.status_code == 200:
+hashes = [line.split(':') for line in response.text.splitlines()]
+for h, count in hashes: if password_hash[5:] == h:
+print(f"Password for user {username} has been leaked {count} times.")
+break
+else:
+print(f"Could not check password for user {username}.")
+
+
+Write a Python program that simulates a brute-force attack on a password by trying out all possible character combinations
+
+
+import itertools
+import string
+def bruteforce_attack(password):
+chars = string.printable.strip()
+attempts = 0
+for length in range(1, len(password) + 1):
+for guess in itertools.product(chars, repeat=length):
+attempts += 1
+guess = ''.join(guess)
+if guess == password:
+return (attempts, guess) return (attempts, None)
+password = input("Input the password to crack: ")
+attempts, guess = bruteforce_attack(password)
+if guess:
+print(f"Password cracked in {attempts} attempts. The password is {guess}.")
+else:
+print(f"Password not cracked after {attempts} attempts.")
+
+
+
+Python program for implementation symmetric encryption using Caesar cipher algorithm
+
+
+
+def encrypt_caesar(plaintext, shift):
+encrypted_text = ""
+for char in plaintext:
+if char.isalpha():
+start = ord('A') if char.isupper() else ord('a')
+encrypted_char = chr((ord(char) - start + shift) % 26 + start)
+encrypted_text += encrypted_char
+else:
+encrypted_text += char
+return
+encrypted_text def decrypt_caesar(ciphertext, shift):
+return
+encrypt_caesar(ciphertext, -shift)
+plaintext = input("Enter the plaintext: ")
+shift = int(input("Enter the shift value: "))
+encrypted_text = encrypt_caesar(plaintext, shift)
+print("Encrypted Text:", encrypted_text)
+decrypted_text = decrypt_caesar(encrypted_text, shift)
+print("Decrypted Text:", decrypted_text)
+
+
+
+program for encoding and decoding using Base64
+
+import base64 d
+ef base64_encode(text):
+encoded_bytes = base64.b64encode(text.encode('utf-8'))
+encoded_text = encoded_bytes.decode('utf-8')
+return encoded_text
+def base64_decode(encoded_text):
+decoded_bytes = base64.b64decode(encoded_text.encode("utf-8"))
+decoded_text = decoded_bytes.decode('utf-8')
+return decoded_text
+text_to_encode = "hello, Base64 Encoding and Decoding !"
+encoded_txt=base64_encode(text_to_encode)
+print("Encoded Text : ",encoded_txt)
+decoded_txt=base64_decode(encoded_txt)
+print("Decoded Text : ",decoded_txt)
+
+
+
+Python program to implement symmetric encryption using python library
+
+from cryptography.fernet import Fernet
+key = Fernet.generate_key()
+f = Fernet(key)
+token =f.encrypt(b"welcome to aimca")
+print(token)
+d = f.decrypt(token)
+print(d)
